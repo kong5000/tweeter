@@ -11,6 +11,13 @@ article.tweet{
 article:hover{
   box-shadow: 5px 10px rgba(105, 109, 221, 0.5);
 }
+.icon{
+  visibility: hidden;
+}
+
+article:hover .icon{
+  visibility: visible;
+}
 
 article:hover .handle-text{
   visibility: visible;
