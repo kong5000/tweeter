@@ -67,6 +67,8 @@ $(document).ready(function () {
     });
 
     $('#tweet-text').val('');
+    const counter = $("#tweet-text").parent().find('.counter');
+    counter.val(140);
   });
 });
 
