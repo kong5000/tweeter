@@ -3,21 +3,22 @@
  * jQuery is already loaded
  * Reminder: Use (and do all your DOM work in) jQuery's document ready function
  */
-{/* <div class="tweet-content">${text}</div> */ }
+
+
+//Escapes text to prevent cross-site scripting
+const escape = function(str) {
+  let div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+};
+
 const createTweetElement = (tweet) => {
-  const escape = function (str) {
-    let div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
-  }
+  const currentDate = new Date();
+  const msAgo = currentDate.getTime() - tweet.created_at;
+  const daysAgo = Math.floor(msAgo / (1000 * 60 * 60 * 24));
 
   const safeHTML = `<div class="tweet-content">${escape(tweet.content.text)}</div>`;
 
-
-  const currentDate = new Date();
-  const msAgo = currentDate.getTime() - tweet.created_at;
-  const daysAgo = Math.floor(msAgo / (1000 * 60 * 60 * 24))
-  const text = $("<div>").text(tweet.content.text);
   return $(`
   <article class="tweet">
   <header class="author-row">
@@ -41,45 +42,46 @@ const createTweetElement = (tweet) => {
     </footer>
   </article>
   `);
-}
+};
 
-$(document).ready(function () {
+
+$(document).ready(function() {
   const $form = $('#tweet-form');
-  $form.on('submit', function (event) {
+  $form.on('submit', function(event) {
     event.preventDefault();
+    $('#error').slideUp("slow");
+
     const tweetLength = $('#tweet-text').val().length;
-    $('#error').slideUp("slow")
     if (tweetLength === 0) {
-      $('#error').text('Tweet cannot be empty!')
-      return $('#error').slideDown("slow")
+      $('#error').text('Tweet cannot be empty!');
+      return $('#error').slideDown("slow");
     } else if (tweetLength > 140) {
-      $('#error').text("Tweet must be < 140 characters")
-      return $('#error').slideDown("slow")
+      $('#error').text("Tweet must be < 140 characters");
+      return $('#error').slideDown("slow");
     }
-    const text = $('#tweet-text').serialize()
-    const $form = $('#tweet-form');
-    const url = $form.attr('action')
+    const text = $('#tweet-text').serialize();
+    const url = $form.attr('action');
 
     $.post(url, text, () => {
-      console.log("success!")
       loadTweets();
-    })
-  })
-})
+    });
+
+    $('#tweet-text').val('');
+  });
+});
 
 const renderTweets = (tweets) => {
+  const container = $('#tweets-container');
   for (const tweet of tweets) {
-    $('#tweets-container').prepend(createTweetElement(tweet)
-    )
+    container.prepend(createTweetElement(tweet));
   }
-}
+};
 
 const loadTweets = () => {
   $.ajax('http://localhost:8080/tweets', { method: 'GET' })
-    .then(function (tweets) {
-      renderTweets(tweets)
-      console.log('Success: ', tweets);
+    .then(function(tweets) {
+      renderTweets(tweets);
     });
-}
+};
 
 loadTweets();
