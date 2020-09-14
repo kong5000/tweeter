@@ -6,7 +6,7 @@
 
 
 //Escapes text to prevent cross-site scripting
-const escape = function (str) {
+const escape = function(str) {
   let div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
   return div.innerHTML;
@@ -45,9 +45,15 @@ const createTweetElement = (tweet) => {
 };
 
 
-$(document).ready(function () {
+$(document).ready(function() {
   const $form = $('#tweet-form');
-  $form.on('submit', function (event) {
+  $form.hide()
+  
+  $('#compose-button').click(function() {
+    $form.slideToggle('slow');
+  })
+  
+  $form.on('submit', function(event) {
     event.preventDefault();
     $('#error').slideUp("slow");
 
@@ -81,7 +87,7 @@ const renderTweets = (tweets) => {
 
 const loadTweets = () => {
   $.ajax('http://localhost:8080/tweets', { method: 'GET' })
-    .then(function (tweets) {
+    .then(function(tweets) {
       renderTweets(tweets);
     });
 };

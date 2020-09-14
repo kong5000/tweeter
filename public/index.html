@@ -31,7 +31,10 @@
 <body>
   <!-- Top nav bar (fixed) -->
   <nav>
-    <span class="logo">tweeter</span>
+    <div id="nav-bar">
+      <span class="logo">tweeter</span>
+      <button id="compose-button">Compose</button>
+    </div>
   </nav>
   <div id="site-container">
   <header id="main-header">
@@ -45,7 +48,7 @@
   </header>
   <main class="container">
     <div id="error" style="display:none;">ERROR</div>
-    <section class="new-tweet">
+    <section class="new-tweet hidden">
       <form id="tweet-form" method="POST" action="http://localhost:8080/tweets">
         <textarea name="text" id="tweet-text"></textarea>
         <div id="submit-container">
